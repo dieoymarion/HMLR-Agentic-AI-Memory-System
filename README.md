@@ -18,26 +18,29 @@ Link to langsmith records for verifiable proof -> https://smith.langchain.com/pu
 
 🏆 Verified Benchmark Achievements (RAGAS)
 
-| Test Scenario                                  | Faithfulness | Context Recall | Precision | Correct Result |
-|----------------------------------------------------------------------|------|------|------|------------------|
-| 7A – API Key Rotation (state conflict)                               | 1.00 | 1.00 | 0.50 | ✅ XYZ789       |
-| 7B – "Ignore Everything" Vegetarian Trap (user invariant vs override)| 1.00 | 1.00 | 0.88 | ✅ salad        |
-| 7C – 5× Timestamp Updates (temporal ordering)                        | 1.00 | 1.00 | 0.64 | ✅ KEY005       |
-| 8 – 30-Day Deprecation Trap (policy + new design, multi-hop)         | 1.00 | 1.00 | 0.27 | ✅ Not Compliant|
-| 2A – 10-Turn Vague Secret Retrieval (zero-keyword recall)            | 1.00 | 1.00 | 0.80 | ✅ ABC123XYZ    |
+| Test Scenario | Faithfulness | Context Recall | Precision | Correct Result |
+|---------------|--------------|----------------|-----------|----------------|
+| 7A – API Key Rotation (state conflict) | 1.00 | 1.00 | 0.50 | ✅ XYZ789 |
+| 7B – "Ignore Everything" Vegetarian Trap (user invariant vs override) | 1.00 | 1.00 | 0.88 | ✅ salad |
+| 7C – 5× Timestamp Updates (temporal ordering) | 1.00 | 1.00 | 0.64 | ✅ KEY005 |
+| 8 – 30-Day Deprecation Trap (policy + new design, multi-hop) | 1.00 | 1.00 | 0.27 | ✅ Not Compliant |
+| 2A – 10-Turn Vague Secret Retrieval (zero-keyword recall) | 1.00 | 1.00 | 0.80 | ✅ ABC123XYZ |
+| 9 – 50-Turn Long Conversation (30-day temporal gap, 11 topics) | 1.00 | 1.00 | 0.99 | ✅ Biscuit |
 
 screenshot of langsmith  RAGAS testing verification:
 ![HMLR_master_test_set](https://github.com/user-attachments/assets/71736c1d-3f40-4b76-a5bd-ef300902f635)
 
 
 What These Results Prove
-These five hard-mode tests cover the exact failure modes where most RAG and memory systems break:
+
+These six hard-mode tests cover the exact failure modes where most RAG and memory systems break:
 
 - **Temporal Truth Resolution**: Newest facts override older ones deterministically
 - **Scoped Secret Isolation**: No cross-topic or cross-block leakage  
 - **Cross-Topic User Invariants**: Persistent constraints survive topic shifts
 - **Multi-Hop Policy Reasoning**: 30-day-old rules correctly govern new designs
 - **Semantic Vague Recall**: Zero keyword overlap required
+- **Long-Term Memory Persistence**: 50-turn conversations with 30-day gaps across 11 topics
 
 Achieving 1.00 Faithfulness and 1.00 Recall across all adversarial scenarios is statistically rare. Most systems score 0.7–0.9 on individual metrics, not all simultaneously.
 
