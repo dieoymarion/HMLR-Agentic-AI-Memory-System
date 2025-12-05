@@ -25,7 +25,7 @@ Link to langsmith records for verifiable proof -> https://smith.langchain.com/pu
 | 7C – 5× Timestamp Updates (temporal ordering) | 1.00 | 1.00 | 0.64 | ✅ KEY005 |
 | 8 – 30-Day Deprecation Trap (policy + new design, multi-hop) | 1.00 | 1.00 | 0.27 | ✅ Not Compliant |
 | 2A – 10-Turn Vague Secret Retrieval (zero-keyword recall) | 1.00 | 1.00 | 0.80 | ✅ ABC123XYZ |
-| 9 – 50-Turn Long Conversation (30-day temporal gap, 11 topics) | 1.00 | 1.00 | 0.99 | ✅ Biscuit |
+| 9 – 50-Turn Long Conversation (30-day temporal gap, 11 topics) | 1.00 | 1.00 | 1.00 | ✅ Biscuit |
 
 screenshot of langsmith  RAGAS testing verification:
 ![HMLR_master_test_set](https://github.com/user-attachments/assets/71736c1d-3f40-4b76-a5bd-ef300902f635)
