@@ -109,20 +109,38 @@ async def test_hydra_of_nine_heads_e2e(tmp_path):
     """
     
     output_md = Path(__file__).parent.parent / "test_12_hydra_e2e_output.md"
-    
+
+    # Simple stdout redirection - capture ALL output including Governor reasoning
+    class TeeOutput:
+        def __init__(self, file_path):
+            self.file = open(file_path, 'w', encoding='utf-8')
+            self.stdout = sys.stdout
+
+        def write(self, text):
+            self.stdout.write(text)
+            self.file.write(text)
+            self.file.flush()
+
+        def flush(self):
+            self.stdout.flush()
+            self.file.flush()
+
+    # Redirect stdout to both console and file
+    tee = TeeOutput(output_md)
+    original_stdout = sys.stdout
+    sys.stdout = tee
+
     def log(msg):
         print(msg)
-        with open(output_md, 'a', encoding='utf-8') as f:
-            f.write(msg + '\n')
-    
+
     # Initialize output
-    with open(output_md, 'w', encoding='utf-8') as f:
-        f.write("# Test 12 E2E: THE HYDRA OF NINE HEADS (Full System)\n\n")
-        f.write("**The Industry Standard Lethal RAG Test - E2E MODE**\n\n")
-        f.write(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
-        f.write("**Historical Note:** 0% first-try pass rate across ALL major models (2025)\n\n")
-        f.write("**Test Mode:** Full E2E (natural AI responses, automatic fact extraction, organic gardening)\n\n")
-        f.write("---\n\n")
+    log("# Test 12 E2E: THE HYDRA OF NINE HEADS (Full System)\n")
+    log("**The Industry Standard Lethal RAG Test - E2E MODE**\n")
+    log(f"**Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    log("**Historical Note:** 0% first-try pass rate across ALL major models (2025)\n")
+    log("**Test Mode:** Full E2E (natural AI responses, automatic fact extraction, organic gardening)\n")
+    log("**NOTE:** This output includes ALL Governor reasoning and bridge block routing decisions\n")
+    log("---\n")
     
     log("=" * 80)
     log("THE HYDRA OF NINE HEADS - E2E MODE")
@@ -632,6 +650,10 @@ Marcus T. VP of Engineering Operations"""
     log(f"Results saved to: {output_file}")
     log(f"Markdown output saved to: {output_md}")
     log("")
+    
+    # Restore stdout
+    sys.stdout = original_stdout
+    tee.file.close()
     
     # Assertions
     assert passed, f"Expected NON-COMPLIANT in answer, got: {answer}"

@@ -14,8 +14,8 @@ The Hydrator is responsible for:
 import logging
 import json
 from typing import List, Dict, Any, Optional
-from memory.storage import Storage
-from memory.models import SlidingWindow, ConversationTurn
+from hmlr.memory.storage import Storage
+from hmlr.memory.models import SlidingWindow, ConversationTurn
 
 logger = logging.getLogger(__name__)
 

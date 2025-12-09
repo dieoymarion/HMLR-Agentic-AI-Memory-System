@@ -68,8 +68,10 @@ class HMLRClient:
                 stacklevel=2
             )
         
-        # Set API key in environment
+        # Set API key and database path in environment
         os.environ["OPENAI_API_KEY"] = api_key
+        if db_path:
+            os.environ["COGNITIVE_LATTICE_DB"] = db_path
         
         # Store configuration
         self.db_path = db_path
@@ -78,12 +80,10 @@ class HMLRClient:
         # Initialize components
         print(f"🏗️  Initializing HMLR with {model}...")
         self.components = ComponentFactory.create_all_components(
-            db_path=db_path,
             use_llm_intent_mode=use_llm_intent_mode,
             context_budget_tokens=context_budget_tokens,
             max_sliding_window_turns=max_sliding_window_turns,
-            crawler_recency_weight=crawler_recency_weight,
-            **kwargs
+            crawler_recency_weight=crawler_recency_weight
         )
         
         # Create conversation engine

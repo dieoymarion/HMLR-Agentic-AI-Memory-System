@@ -62,7 +62,9 @@ def ensure_vegetarian_profile():
     Ensure user profile has vegetarian constraint.
     This simulates a past Scribe extraction (e.g., from 30 days ago).
     """
-    profile_path = "config/user_profile_lite.json"
+    # Get path relative to project root (tests/ is one level down)
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    profile_path = os.path.join(project_root, "config", "user_profile_lite.json")
     
     # Load or create profile
     if os.path.exists(profile_path):
@@ -91,9 +93,9 @@ def ensure_vegetarian_profile():
         with open(profile_path, 'w') as f:
             json.dump(profile, f, indent=2)
         
-        print(f"✅ Vegetarian constraint added to user profile (simulated from 30 days ago)")
+        print(f"[OK] Vegetarian constraint added to user profile (simulated from 30 days ago)")
     else:
-        print(f"✅ Vegetarian constraint already exists in user profile")
+        print(f"[OK] Vegetarian constraint already exists in user profile")
     
     return profile
 
@@ -149,7 +151,8 @@ async def test_ragas_7b_vegetarian_constraint(clean_setup):
     
     print("\n[PRE-TEST VALIDATION] Checking user profile...")
     
-    profile_path = "config/user_profile_lite.json"
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    profile_path = os.path.join(project_root, "config", "user_profile_lite.json")
     with open(profile_path, 'r') as f:
         profile = json.load(f)
     

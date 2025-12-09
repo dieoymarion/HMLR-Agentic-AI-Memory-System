@@ -11,22 +11,22 @@ Extracted from main.py as part of Phase 3 refactor.
 import os
 from dataclasses import dataclass
 from typing import Optional
-from memory import Storage
-from memory.conversation_manager import ConversationManager
-from memory.models import SlidingWindow
-from memory.metadata_extractor import LLMMetadataExtractor
-from memory.embeddings.embedding_manager import EmbeddingManager, EmbeddingStorage
-from memory.retrieval.intent_analyzer import IntentAnalyzer
-from memory.retrieval.crawler import LatticeCrawler
-from memory.retrieval.context_hydrator import ContextHydrator
-from memory.retrieval.lattice import LatticeRetrieval, TheGovernor
-from memory.retrieval.hmlr_hydrator import Hydrator
-from memory.synthesis import SynthesisManager
-from memory.synthesis.user_profile_manager import UserProfileManager
-from memory.synthesis.scribe import Scribe
-from memory.chunking.chunk_engine import ChunkEngine
-from memory.fact_scrubber import FactScrubber
-from core.cognitive_lattice import SessionManager
+from hmlr.memory import Storage
+from hmlr.memory.conversation_manager import ConversationManager
+from hmlr.memory.models import SlidingWindow
+from hmlr.memory.metadata_extractor import LLMMetadataExtractor
+from hmlr.memory.embeddings.embedding_manager import EmbeddingManager, EmbeddingStorage
+from hmlr.memory.retrieval.intent_analyzer import IntentAnalyzer
+from hmlr.memory.retrieval.crawler import LatticeCrawler
+from hmlr.memory.retrieval.context_hydrator import ContextHydrator
+from hmlr.memory.retrieval.lattice import LatticeRetrieval, TheGovernor
+from hmlr.memory.retrieval.hmlr_hydrator import Hydrator
+from hmlr.memory.synthesis import SynthesisManager
+from hmlr.memory.synthesis.user_profile_manager import UserProfileManager
+from hmlr.memory.synthesis.scribe import Scribe
+from hmlr.memory.chunking.chunk_engine import ChunkEngine
+from hmlr.memory.fact_scrubber import FactScrubber
+from hmlr.core.cognitive_lattice import SessionManager
 
 
 @dataclass
@@ -126,10 +126,7 @@ class ComponentFactory:
         
         # === Utilities === #
         print("   🛠️  Initializing utilities...")
-        debug_logger = MemoryDebugLogger()
-        print(f"   📝 Memory debug logging enabled")
-        
-        metadata_extractor = LLMMetadataExtractor(debug_logger=debug_logger)
+        metadata_extractor = LLMMetadataExtractor()
         print(f"   💾 Persistent memory enabled (day: {conversation_mgr.current_day})")
         print(f"   📊 Metadata extraction enabled")
         
@@ -182,7 +179,7 @@ class ComponentFactory:
         print("   🌐 Initializing external services...")
         
         try:
-            from core.external_api_client import ExternalAPIClient
+            from hmlr.core.external_api_client import ExternalAPIClient
             external_api = ExternalAPIClient()
             print(f"   🌐 External API client initialized")
         except Exception as e:
@@ -249,7 +246,7 @@ class ComponentFactory:
         Returns:
             Initialized ConversationEngine
         """
-        from core.conversation_engine import ConversationEngine
+        from hmlr.core.conversation_engine import ConversationEngine
         
         print("🚀 Creating ConversationEngine...")
         

@@ -58,26 +58,9 @@ class UserProfileManager:
                 glossary = data.get('glossary', {})
                 context_str = "<user_glossary>\n"
                 
-                # Projects
-                if glossary.get('projects'):
-                    context_str += "  [Projects]\n"
-                    for p in glossary['projects']:
-                        desc = p.get('description', '')
-                        domain = p.get('domain', '')
-                        status = p.get('status', '')
-                        context_str += f"  - {p['key']}: {desc} ({domain}) [{status}]\n"
-                
-                # Entities
-                if glossary.get('entities'):
-                    context_str += "  [Entities]\n"
-                    for e in glossary['entities']:
-                        desc = e.get('description', '')
-                        etype = e.get('type', '')
-                        context_str += f"  - {e['key']}: {desc} ({etype})\n"
-                
-                # Constraints
+                # CRITICAL: Constraints FIRST - they must never be truncated
                 if glossary.get('constraints'):
-                    context_str += "  [Constraints]\n"
+                    context_str += "  [Constraints - IMMUTABLE]\n"
                     for c in glossary['constraints']:
                         # Constraints have 'description' not 'value'
                         desc = c.get('description', c.get('value', ''))
@@ -91,6 +74,23 @@ class UserProfileManager:
                             context_str += f"  - {c['key']}: {desc} [Type: {constraint_type}]\n"
                         else:
                             context_str += f"  - {c['key']}: {desc}\n"
+                
+                # Projects (can be truncated if needed)
+                if glossary.get('projects'):
+                    context_str += "  [Projects]\n"
+                    for p in glossary['projects']:
+                        desc = p.get('description', '')
+                        domain = p.get('domain', '')
+                        status = p.get('status', '')
+                        context_str += f"  - {p['key']}: {desc} ({domain}) [{status}]\n"
+                
+                # Entities (can be truncated if needed)
+                if glossary.get('entities'):
+                    context_str += "  [Entities]\n"
+                    for e in glossary['entities']:
+                        desc = e.get('description', '')
+                        etype = e.get('type', '')
+                        context_str += f"  - {e['key']}: {desc} ({etype})\n"
                 
                 context_str += "</user_glossary>"
                 

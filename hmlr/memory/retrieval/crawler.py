@@ -16,16 +16,16 @@ import os
 
 # Handle imports for both standalone and package contexts
 try:
-    from memory.models import Intent, RetrievedContext, DayNode, TaskState, Keyword, SlidingWindow
-    from memory.storage import Storage
-    from memory.embeddings.embedding_manager import EmbeddingStorage
-    from memory import UserPlan
+    from hmlr.memory.models import Intent, RetrievedContext, DayNode, TaskState, Keyword, SlidingWindow
+    from hmlr.memory.storage import Storage
+    from hmlr.memory.embeddings.embedding_manager import EmbeddingStorage
+    from hmlr.memory import UserPlan
 except ImportError:
     sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-    from memory.models import Intent, RetrievedContext, DayNode, TaskState, Keyword, SlidingWindow
-    from memory.storage import Storage
-    from memory.embeddings.embedding_manager import EmbeddingStorage
-    from memory import UserPlan
+    from hmlr.memory.models import Intent, RetrievedContext, DayNode, TaskState, Keyword, SlidingWindow
+    from hmlr.memory.storage import Storage
+    from hmlr.memory.embeddings.embedding_manager import EmbeddingStorage
+    from hmlr.memory import UserPlan
 
 
 class LatticeCrawler:

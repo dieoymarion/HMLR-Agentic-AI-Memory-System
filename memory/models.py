@@ -403,7 +403,7 @@ class SlidingWindow:
     - Allows retrieval of pruned turns (needed for context)
     """
     turns: List[ConversationTurn] = field(default_factory=list)
-    max_turns: int = 20                       # Token budget management
+    max_turns: int = 25                       # Token budget management
     
     # Topic tracking (for avoiding redundant retrieval)
     active_topics: Dict[str, datetime] = field(default_factory=dict)  # {topic: last_used}

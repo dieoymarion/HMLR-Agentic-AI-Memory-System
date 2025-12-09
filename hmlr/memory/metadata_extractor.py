@@ -434,7 +434,7 @@ AFFECT: enthusiastic
 
 import json
 from dataclasses import dataclass
-from core.llama_client import run_llama_inference
+from hmlr.core.llama_client import run_llama_inference
 
 
 @dataclass

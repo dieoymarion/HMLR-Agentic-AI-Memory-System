@@ -1,4 +1,4 @@
-HMLR — Hierarchical Memory Lookup & Routing
+**HMLR — Hierarchical Memory Lookup & Routing**
 
 A state-aware, long-term memory architecture for AI agents with verified multi-hop, temporal, and cross-topic reasoning guarantees.
 
@@ -16,7 +16,7 @@ while operating entirely on mini-class LLMs.
 All results are verified using the RAGAS industry evaluation framework.
 Link to langsmith records for verifiable proof -> https://smith.langchain.com/public/4b3ee453-a530-49c1-abbf-8b85561e6beb/d
 
-🏆 Verified Benchmark Achievements (RAGAS)
+**RAGAS Verified Benchmark Achievements**
 
 | Test Scenario | Faithfulness | Context Recall | Precision | Correct Result |
 |---------------|--------------|----------------|-----------|----------------|
@@ -34,7 +34,7 @@ screenshot of langsmith  RAGAS testing verification:
 ![HMLR_master_test_set](https://github.com/user-attachments/assets/71736c1d-3f40-4b76-a5bd-ef300902f635)
 
 
-What These Results Prove
+**What These Results Prove**
 
 These seven hard-mode tests cover the exact failure modes where most RAG and memory systems break:
 
@@ -101,12 +101,12 @@ flowchart TD
 ```
 
 
-Tests:
-All of the RAGAS tests can be found in the tests folder for ease of running at own convenience.
-command needed similar to : \HMLR\tests; pytest ragas_test_8_multi_hop.py -v -s
+## Running the Tests
+
+All RAGAS validation tests are in the `tests/` folder. See the [Running Tests](#running-tests-from-source) section at the bottom for execution commands.
 
 
-⚖️ About the Precision Scores
+**About the Precision Scores**
 
 While Faithfulness and Recall are perfect (1.00), Context Precision ranges from 0.27–0.88.
 This is intentional: HMLR retrieves entire Bridge Blocks (5–10 turns) instead of fragments, ensuring no critical memory is omitted. This prioritizes governance, policy enforcement, security, and longitudinal reasoning over strict token minimization.
@@ -187,22 +187,13 @@ State-aware simulation and world modeling
 Cost-efficient mini-model orchestration with pro-level behavior
 
 
-## 🚀 Quick Start
+## **Quick Start** ##
 
 ### Installation
 
 **Install from PyPI:**
 ```bash
 pip install hmlr
-```
-
-**With optional features:**
-```bash
-# LangChain integration
-pip install hmlr[langchain]
-
-# All features
-pip install hmlr[langchain,telemetry,dev]
 ```
 
 **Or install from source:**
@@ -214,6 +205,12 @@ pip install -e .
 
 ### Basic Usage
 
+First, set your OpenAI API key:
+```bash
+export OPENAI_API_KEY="your-openai-api-key"
+```
+
+Then run a simple conversation:
 ```python
 from hmlr import HMLRClient
 import asyncio
@@ -239,18 +236,23 @@ asyncio.run(main())
 
 **⚠️ CRITICAL**: HMLR is ONLY tested with `gpt-4.1-mini`. Other models are NOT guaranteed.
 
-### LangChain Integration
+### Development Setup (Recommended)
 
-```python
-from hmlr.integrations.langchain import HMLRMemory
-from langchain.chains import ConversationChain
-from langchain_openai import ChatOpenAI
+For contributors and advanced users:
 
-memory = HMLRMemory(api_key="your-key", db_path="memory.db")
-llm = ChatOpenAI(model="gpt-4.1-mini")
-chain = ConversationChain(llm=llm, memory=memory)
+```bash
+# Clone repository
+git clone https://github.com/Sean-V-Dev/HMLR-Agentic-AI-Memory-System.git
+cd HMLR-Agentic-AI-Memory-System
 
-response = chain.invoke({"input": "Hello!"})
+# Install in development mode with all dependencies
+pip install -e .[dev]
+
+# Verify installation
+python -c "import hmlr; print('✅ HMLR ready for development!')"
+
+# Run the full test suite (recommended before making changes)
+pytest tests/ -v --tb=short
 ```
 
 ### Documentation
@@ -263,7 +265,6 @@ response = chain.invoke({"input": "Hello!"})
 ### Prerequisites (for development)
 - Python 3.10+
 - OpenAI API key (for GPT-4.1-mini)
-- Optional: LangSmith API key for test result tracking
 
 ### Running Tests (from source)
 ```bash
@@ -272,7 +273,18 @@ git clone https://github.com/Sean-V-Dev/HMLR-Agentic-AI-Memory-System.git
 cd HMLR-Agentic-AI-Memory-System
 pip install -e .[dev]
 
-# Run RAGAS benchmarks
-cd tests
-pytest ragas_test_8_multi_hop.py -v -s  # Example: Multi-hop test
+# Quick verification (runs in < 30 seconds)
+python test_local_install.py
+
+# Try the interactive example (requires OPENAI_API_KEY)
+python examples/simple_usage.py
+
+# Run all RAGAS benchmarks (comprehensive, ~15-20 minutes total)
+pytest tests/ -v --tb=short
+
+# Or run individual tests:
+pytest tests/ragas_test_7b_vegetarian.py -v -s  # User constraints test
+pytest tests/test_12_hydra_e2e.py -v -s        # Industry benchmark
 ```
+
+**Note**: Tests take 1-3 minutes each. The `-v -s` flags show live execution. Ignore RAGAS logging errors at the end if assertions pass. 

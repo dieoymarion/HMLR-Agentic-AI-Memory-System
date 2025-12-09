@@ -14,8 +14,8 @@ from dataclasses import dataclass, field
 from collections import defaultdict, Counter
 import json
 
-from memory.models import DayNode, DaySynthesis, Keyword, Summary, Affect, ConversationTurn
-from memory.storage import Storage
+from hmlr.memory.models import DayNode, DaySynthesis, Keyword, Summary, Affect, ConversationTurn
+from hmlr.memory.storage import Storage
 
 
 @dataclass

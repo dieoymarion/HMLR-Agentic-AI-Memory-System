@@ -15,12 +15,12 @@ import os
 
 # Handle imports for both standalone and package contexts
 try:
-    from memory.models import Intent, QueryType
-    from memory import UserPlan
+    from hmlr.memory.models import Intent, QueryType
+    from hmlr.memory import UserPlan
 except ImportError:
     sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-    from memory.models import Intent, QueryType
-    from memory import UserPlan
+    from hmlr.memory.models import Intent, QueryType
+    from hmlr.memory import UserPlan
 
 
 class IntentAnalyzer:
@@ -296,7 +296,7 @@ Respond with ONLY the JSON object, no other text."""
             Intent object with extracted information
         """
         try:
-            from core.llama_client import run_llama_inference
+            from hmlr.core.llama_client import run_llama_inference
             import json
             
             # Build LLM prompt

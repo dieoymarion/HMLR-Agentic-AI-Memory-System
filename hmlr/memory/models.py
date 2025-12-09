@@ -403,7 +403,7 @@ class SlidingWindow:
     - Allows retrieval of pruned turns (needed for context)
     """
     turns: List[ConversationTurn] = field(default_factory=list)
-    max_turns: int = 20                       # Token budget management
+    max_turns: int = 25                       # Token budget management
     
     # Topic tracking (for avoiding redundant retrieval)
     active_topics: Dict[str, datetime] = field(default_factory=dict)  # {topic: last_used}
@@ -498,9 +498,9 @@ class SlidingWindow:
         """
         # Import here to avoid circular dependency
         try:
-            from memory.id_generator import get_id_type
+            from hmlr.memory.id_generator import get_id_type
         except ImportError:
-            from id_generator import get_id_type
+            from hmlr.memory.id_generator import get_id_type
         
         id_type = get_id_type(item_id)
         
@@ -529,9 +529,9 @@ class SlidingWindow:
             True if item was in window but got pruned
         """
         try:
-            from memory.id_generator import get_id_type
+            from hmlr.memory.id_generator import get_id_type
         except ImportError:
-            from id_generator import get_id_type
+            from hmlr.memory.id_generator import get_id_type
         
         id_type = get_id_type(item_id)
         
@@ -555,9 +555,9 @@ class SlidingWindow:
         """
         # Import here to avoid circular dependency
         try:
-            from memory.id_generator import get_id_type
+            from hmlr.memory.id_generator import get_id_type
         except ImportError:
-            from id_generator import get_id_type
+            from hmlr.memory.id_generator import get_id_type
         
         id_type = get_id_type(item_id)
         
@@ -621,7 +621,7 @@ class SlidingWindow:
         
         This is called AFTER each turn to persist compression state.
         """
-        from memory.sliding_window_persistence import SlidingWindowPersistence
+        from hmlr.memory.sliding_window_persistence import SlidingWindowPersistence
         persistence = SlidingWindowPersistence(filepath)
         persistence.save_window(self.turns)
     
@@ -633,7 +633,7 @@ class SlidingWindow:
         Returns a fully populated SlidingWindow with turns in their
         compressed/verbatim state from the last session.
         """
-        from memory.sliding_window_persistence import SlidingWindowPersistence
+        from hmlr.memory.sliding_window_persistence import SlidingWindowPersistence
         persistence = SlidingWindowPersistence(filepath)
         turns = persistence.load_window()
         

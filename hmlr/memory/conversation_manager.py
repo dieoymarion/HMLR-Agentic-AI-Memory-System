@@ -75,7 +75,7 @@ class ConversationManager:
             from models import SlidingWindow
         
         self.sliding_window = SlidingWindow()
-        self.sliding_window.max_turns = 20  # Keep last 20 turns in window
+        self.sliding_window.max_turns = 25  # Keep last 25 turns in window
         
         # Ensure today exists
         self._ensure_day_exists(self.current_day)

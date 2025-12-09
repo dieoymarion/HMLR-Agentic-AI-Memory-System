@@ -2086,7 +2086,7 @@ if __name__ == "__main__":
         # Test 4: Save task
         print("\n4. Creating task...")
         try:
-            from memory.models import create_task_id
+            from hmlr.memory.models import create_task_id
         except ImportError:
             from models import create_task_id
         

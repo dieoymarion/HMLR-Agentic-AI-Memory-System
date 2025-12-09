@@ -18,10 +18,10 @@ from datetime import datetime
 from typing import List, Optional, Dict
 from dataclasses import dataclass
 
-from memory.bridge_models.bridge_block import BridgeBlock, BlockStatus, ExitReason
-from memory.models import ConversationTurn, Span
-from memory.chunking import ChunkStorage
-from memory.storage import Storage
+from hmlr.memory.bridge_models.bridge_block import BridgeBlock, BlockStatus, ExitReason
+from hmlr.memory.models import ConversationTurn, Span
+from hmlr.memory.chunking import ChunkStorage
+from hmlr.memory.storage import Storage
 
 logger = logging.getLogger(__name__)
 

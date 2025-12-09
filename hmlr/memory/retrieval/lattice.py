@@ -15,12 +15,12 @@ import asyncio
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
 from datetime import datetime
-from core.telemetry import get_tracer
+from hmlr.core.telemetry import get_tracer
 
-from memory.storage import Storage
-from core.external_api_client import ExternalAPIClient
-from memory.retrieval.crawler import LatticeCrawler
-from memory.models import Intent, QueryType
+from hmlr.memory.storage import Storage
+from hmlr.core.external_api_client import ExternalAPIClient
+from hmlr.memory.retrieval.crawler import LatticeCrawler
+from hmlr.memory.models import Intent, QueryType
 
 logger = logging.getLogger(__name__)
 
@@ -245,7 +245,7 @@ class TheGovernor:
                     "topic_label": "Initial Conversation"
                 }
             
-            # Build routing prompt with metadata
+            # Build routing prompt with metadata AND FACTS
             blocks_text = ""
             for i, meta in enumerate(metadata_list):
                 last_active_marker = " (LAST ACTIVE)" if meta.get('is_last_active') else ""
@@ -263,7 +263,22 @@ class TheGovernor:
                     blocks_text += f"   Decisions: {', '.join(meta['decisions_made'][:3])}\n"
                 
                 blocks_text += f"   Turn Count: {meta.get('turn_count', 0)}\n"
-                blocks_text += f"   Last Updated: {meta.get('last_updated', 'Unknown')}\n\n"
+                blocks_text += f"   Last Updated: {meta.get('last_updated', 'Unknown')}\n"
+                
+                # CRITICAL: Add all facts extracted for this topic
+                block_facts = self.storage.get_facts_for_block(meta.get('block_id'))
+                if block_facts:
+                    blocks_text += f"   Facts Extracted ({len(block_facts)} total):\n"
+                    # Show up to 10 most recent facts
+                    for fact in block_facts[:10]:
+                        fact_preview = fact.get('value', '')[:80]
+                        if len(fact.get('value', '')) > 80:
+                            fact_preview += '...'
+                        blocks_text += f"      • {fact.get('key', 'unknown')}: {fact_preview}\n"
+                    if len(block_facts) > 10:
+                        blocks_text += f"      ... and {len(block_facts) - 10} more facts\n"
+                
+                blocks_text += "\n"
             
             routing_prompt = f"""You are an intelligent topic routing assistant for a conversational memory system.
 
@@ -274,6 +289,12 @@ USER QUERY: "{query}"
 
 YOUR TASK:
 Analyze the user's query and determine which topic block it belongs to. Use your intelligence to understand the INTENT and SEMANTIC CONTEXT, not just surface-level keywords.
+
+**CRITICAL: Use the Facts Extracted to understand topic depth and context**
+Each topic shows "Facts Extracted" - these reveal what specific information has been learned during that conversation. 
+- If the query relates to ANY of these facts, it belongs to that topic
+- Facts show the ACTUAL content discussed, not just keywords
+- A topic with many related facts indicates an ongoing deep discussion - don't abandon it prematurely
 
 You have 3 possible decisions:
 1. **Continue LAST ACTIVE topic** - Query relates to the ongoing conversation
@@ -425,7 +446,7 @@ Return JSON:
                 
                 # Use crawler to perform vector search
                 try:
-                    from memory.models import Intent, QueryType
+                    from hmlr.memory.models import Intent, QueryType
                     
                     # Create intent for crawler (Intent is a dataclass)
                     # Pass query as keywords for vector search

@@ -3,8 +3,8 @@ import json
 import logging
 from typing import Dict, Any, Optional
 
-from core.external_api_client import ExternalAPIClient
-from memory.synthesis.user_profile_manager import UserProfileManager
+from hmlr.core.external_api_client import ExternalAPIClient
+from hmlr.memory.synthesis.user_profile_manager import UserProfileManager
 
 logger = logging.getLogger(__name__)
 
@@ -15,29 +15,50 @@ Your goal is to maintain a "Glossary" of the user's life by extracting **Project
 You do NOT answer the user. You only output JSON updates for the database.
 
 ### 1. DEFINITIONS & HEURISTICS (The Filter)
-Do not record every noun. Only record items that pass these tests:
+Do not record every noun. Only record items that pass the **SELF-REFERENCE TEST**.
+
+**CRITICAL: The "ME" Test**
+If the information doesn't explicitly link to the USER's identity or behavior, REJECT IT.
+* ✅ "I am building HMLR" → User is the actor
+* ❌ "Policy v7 is rolling out" → Passive external event (IGNORE - this is a world Fact, not a user Profile item)
+* ❌ "The Synergy team is merging tools" → External group (IGNORE)
 
 **A. DEFINITION OF A "PROJECT"**
-To be saved as a Project, an endeavor must meet ALL 3 criteria:
-1.  **Named:** The user refers to it by a proper noun (e.g., "HMLR", "Blue Sky", "The '69 Chevy"). If it is generic ("my work"), IGNORE it.
-2.  **Persistent:** It is a multi-session goal (weeks/months), not a temporary task (homework, chores).
-3.  **User-Owned:** The user is the active creator or owner.
+To be saved as a Project, it must be an ACTIVE ENDEAVOR OWNED BY THE USER.
+* ✅ "I am building Project Hades." (User is the actor)
+* ✅ "My project HMLR uses Python." (User owns it)
+* ❌ "Policy v7 is rolling out." (Passive event → IGNORE. This is a Fact, not a Project)
+* ❌ "The Synergy Realization team is merging tools." (External group → IGNORE)
+* ❌ "Project Cerberus will encrypt 4.7 million records." (No user ownership stated → IGNORE unless user says "my project" or "I'm working on")
+
+Tests:
+1.  **Named:** Proper noun (e.g., "HMLR", "Blue Sky", "The '69 Chevy"). Generic names ("my work") → IGNORE.
+2.  **Persistent:** Multi-session goal (weeks/months), not temporary tasks.
+3.  **User-Owned:** User explicitly claims ownership ("I am building", "my project", "I'm working on").
 
 **B. DEFINITION OF AN "ENTITY"**
-A permanent fact about the user's world:
-* **Business:** Company name, job title.
-* **Person:** Family member names (e.g., "My son Mike"), but NOT temporary states (e.g., "Mike is hungry").
-* **Asset:** Major user-owned assets (e.g., "My server rack", "My boat").
+A permanent fact directly tied to the USER's personal world:
+* **Business:** "I work at Acme Corp", "My company is called..."
+* **Person:** "My son Mike", "My manager Sarah" (NOT just "Mike" or "Sarah" without relationship)
+* **Asset:** "My server rack", "My boat" (USER-OWNED assets only)
 
 **C. DEFINITION OF A "CONSTRAINT"**
-A permanent user preference, restriction, or rule that affects decision-making:
-* **Dietary Restrictions:** "I am vegetarian", "I have a nut allergy", "I don't eat gluten"
-* **Allergies:** "I have a latex allergy", "I'm allergic to pet dander", "I can't be around shellfish"
-* **Work Constraints:** "I only work 9-5", "I never work weekends", "I don't do on-call"
-* **Communication Preferences:** "I prefer email over calls", "Don't contact me after 8pm"
-* **Personal Rules:** "I don't use Windows", "I always back up code", "I never use tabs (spaces only)"
+A permanent configuration of the USER, not a rule of the world.
+* ✅ "I am vegetarian." (Configures the User)
+* ✅ "I never work weekends." (Configures the User's schedule)
+* ✅ "I have a nut allergy." (User's medical condition)
+* ❌ "All reports are due on Friday." (Rule of the world/Deadline → IGNORE)
+* ❌ "Policy v6 limits encryption to 400k records." (External Fact → IGNORE)
+* ❌ "Training is mandatory next month." (Company rule → IGNORE)
 
-Constraints are different from temporary states. "I have a latex allergy" = CONSTRAINT. "My hand itches" = temporary state (IGNORE).
+**THE "I AM/I HAVE" TEST:**
+If you can't preface the sentence with "I am..." or "I have...", it is NOT a Profile Constraint.
+* "I have a vegetarian diet" → PASS
+* "I have a Policy v6" → FAIL (The company has the policy, not you)
+
+Constraints are different from temporary states:
+* "I have a latex allergy" = CONSTRAINT (permanent)
+* "My hand itches" = temporary state (IGNORE)
 
 ### 2. ACTION RULES (Append vs. Edit)
 

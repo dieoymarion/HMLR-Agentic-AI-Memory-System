@@ -22,7 +22,7 @@ from typing import List, Dict, Any, Optional
 from dataclasses import dataclass, asdict
 from datetime import datetime
 
-from memory.storage import Storage
+from hmlr.memory.storage import Storage
 
 
 @dataclass
